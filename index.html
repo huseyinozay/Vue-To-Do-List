@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Kurs Planlaması</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>Kurs Planlaması</header>
+    <div class="container" id="app">
+      <div class="course--planner-app--container">
+        <div class="card">
+          <div class="user--action--container">
+            <div class="form-group">
+              <label>Kursun Adı</label>
+              <input type="text" v-model="courseName"/>
+            </div>
+            <button class="btn-primary" @click="add()">Kurs Ekle</button>
+            
+          </div>
+          <label class="bg-danger">  {{warning}}  </label>
+        </div>
+        <div class="card card-light mt-20">
+          <h3>Aktif Kurslarım</h3>
+          <ul class="list mt-20">
+            <li v-for = "course in courses" class="course-item list-item" :class="{'bg-success':course.done, 'bg-danger':!course.done}" >
+              <span>{{course.name}}</span>
+              <input type="checkbox" v-model="course.done" />
+              
+            </li>
+          </ul>
+        </div>
+        <div class="mt-10">
+          <small>İzlenecek {{courses.length-doneCourse()}} adet kursunuz var.</small>
+        </br>
+          <small>Tamamlanmış  {{doneCourse()}} adet kursunuz var.</small>
+        </div>
+      </div>
+    </div>
+    <script>
+      Vue.createApp({
+        data(){
+          return{
+            counter :0,
+            warning : '',
+            courseId : 1,
+            courseName : '',
+            courses : [],
+          }
+        },
+        methods:{
+          add(){
+            if(this.courseName==''){
+              setTimeout(()=>this.warning = '',5000),
+              this.warning = 'Kursun adı boş bırakılamaz!'
+            }
+            else{
+              this.courses.push({
+                id : this.courseId++,
+                name : this.courseName,
+                done : false
+              });
+              this.courseName = ''
+            }
+            
+          },
+          doneCourse(){
+            this.counter = 0
+            for (i=0;i<this.courses.length;i++){
+              if(this.courses[i].done == true){
+                this.counter++
+              }
+            }
+            return this.counter
+          }
+        },
+      }).mount("#app")
+    </script>
+  </body>
+</html>
